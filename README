@@ -1,1 +1,1 @@
-This file was created by JetBrains RubyMine 4.5.4 for binding GitHub repository
+Ruby Bandstand is a web interface that wraps around pianobar's command line interface to Pandora. Bandstand was created as a way to remotely control a machine running pianobar from any other computer/device on the network.
