@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Ryan's Pandora</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/scripts/frameworks/jquery.js"></script>
+  <script src="/scripts/frameworks/underscore.js"></script>
+  <script src="/bootstrap/js/bootstrap.js"></script>
+
+  <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <style>
+      body {
+          padding-top: 20px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+  </style>
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+
+<div class="container-fluid">
+  <div class='row-fluid'>
+    <div class='span4'>
+      <h3>Ryan's Pandora Web Interface</h3>
+      <a href="/pandora_logout" class='btn'>Logout of Pandora (this will stop the music)</a>
+      <div class='well'>
+        <h3>Stations (click one to choose)</h3>
+        <ul>
+          <% PianoBar.stations.each_with_index do |station, index| %>
+          <li><a href="#" onclick="selectStation('<%= index %>')"><%= station %></a></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+    <div class='span8'>
+      <h3>Now playing: <span id="nowplaying"></span></h3>
+      <h5>Time remaining: <span id="time"></span> </h5>
+      <div class="btn-group">
+          <button class='btn btn-success btn-large' onclick='thumbsUp();'> <i class="icon-thumbs-up icon-white"></i> </button>
+          <button class='btn btn-danger btn-large' onclick='thumbsDown();'> <i class="icon-thumbs-down icon-white"></i> </button>
+          <button class='btn btn-large' onclick='playPause();'> <i class="icon-play"></i><i class="icon-pause"></i> </button>
+          <button class='btn btn-large' onclick='nextSong();'> <i class="icon-step-forward"></i> </button>
+          <button class='btn btn-large' onclick='volumeDown();'> <i class="icon-volume-down"></i> </button>
+          <button class='btn btn-large' onclick='volumeUp();'> <i class="icon-volume-up"></i> </button>
+      </div>
+      <br>
+      <a data-toggle="modal" href="/info/explain_current_song" data-target="#myModal">Why did Pandora play this song?</a>
+      <br><br><br><br>
+      <a href="/commands/re_init" class='btn'>Is everything broken? Click here to reset</a>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Why did this song play?</h3>
+  </div>
+  <div class="modal-body">
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Thanks!</button>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function selectStation(station) {
+      $.get('/commands/choose_station?station=' + station);
+  }
+
+  function thumbsUp() {
+      $.get('/commands/thumbs_up');
+  }
+
+  function thumbsDown() {
+      $.get('/commands/thumbs_down');
+  }
+
+  function nextSong() {
+      $.get('/commands/next_song');
+  }
+
+  function playPause() {
+      $.get('/commands/play_pause');
+  }
+
+  function volumeUp() {
+      $.get('/commands/volume_up');
+  }
+
+  function volumeDown() {
+      $.get('/commands/volume_down');
+  }
+
+  window.setInterval(function () {
+      $.get('/info/current_song', function (results) {
+          $('#nowplaying').html(results);
+      });
+      $.get('/info/current_time', function (time) {
+          $('#time').html(time);
+      });
+      $.get('/info/login_status', function (status) {
+          if (status == "disconnected") {
+              window.location = "/";
+          }
+      });
+  }, 2000);
+
+  window.setInterval(function () {
+      window.location = "/";
+  }, (1000 * 60 * 5));
+</script>
+
+</body>
+</html>

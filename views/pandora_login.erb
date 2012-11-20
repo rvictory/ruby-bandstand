@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PianoBar Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/scripts/frameworks/jquery.js"></script>
+  <script src="/bootstrap/js/bootstrap.js"></script>
+
+  <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <style>
+      body {
+          padding-top: 20px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+  </style>
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+
+<div class="container">
+  <div class='row'>
+    <div class='span6 offset3'>
+      <% if @show_error %>
+          <div class='alert alert-error'>
+            <h4>Error!</h4>
+            There was a problem logging you in. Please check your username and password and try again.
+          </div>
+      <% end %>
+      <form method='post'>
+        <legend>Please login to your Pandora Account</legend>
+        <label>Email</label>
+        <input class='input-xlarge' type="text" name="username">
+        <label>Password</label>
+        <input class='input-xlarge' name="password" type="password">
+        <div class="form-actions">
+          <button type="submit" class='btn btn-primary'><i class="icon-lock icon-white"></i> Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input').first().focus();
+    });
+</script>
+
+
+</body>
+</html>
