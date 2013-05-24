@@ -45,6 +45,9 @@
       <div class='row-fluid'>
         <div class='span4'>
           <img id='album_art'>
+          <div id='album_art_not_available' class='img-polaroid' style='width: 200px; height: 200px; display: none;'>
+            <h4>Album art not available</h4>
+          </div>
         </div>
         <div class='span8'>
           <h3>Now playing: <span id="nowplaying"></span></h3>
@@ -63,12 +66,12 @@
         </div>
 
       </div>
-      <h5>Lyrics</h5>
+      <h6>Lyrics</h6>
       <div id='lyrics'>
 
       </div>
       <a href='#' target='_blank' id='view_full_lyrics'>View full lyrics</a>
-      <h5>Upcoming Songs</h5>
+      <h6>Upcoming Songs</h6>
       <ul id='upcoming_songs'>
 
       </ul>
@@ -143,6 +146,13 @@
       });
 
       $.get('/info/current_album_art', function (results) {
+          if (results == '') {
+              $('#album_art').hide();
+              $('#album_art_not_available').show();
+              return;
+          }
+          $('#album_art').show();
+          $('#album_art_not_available').hide();
           if ($('#album_art').attr('src') != results) {
               $('#album_art').attr('src', results);
           }
