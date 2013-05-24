@@ -75,11 +75,15 @@ end
 get '/info/current_album_art' do
   song_info = PianoBar.current_song
   return "" if song_info.nil?
-  song_name, temp = song_info.split(" by ")
-  artist, album = temp.split(" on ") unless temp.nil?
-  if artist && album
+  song_name, temp = song_info.split('" by "')
+  artist, album = temp.split('" on "') unless temp.nil?
+  unless artist.nil? || album.nil?
+    puts artist.inspect
+    puts album.inspect
     artist.gsub!('"', '')
-    album.gsub!('"', '').gsub!(' (Single)', '')
+    album.gsub!('"', '')
+    album.gsub!(' (Single)', '')
+    album.gsub!("<3", "")
     return SongInfo.get_album_image_url(artist, album)
   else
     return ""
