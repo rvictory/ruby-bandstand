@@ -1,3 +1,4 @@
+require 'thread'
 class PianoBar
 
   @@pianobar = {}
@@ -11,6 +12,8 @@ class PianoBar
   @@initialized = false
 
   @@stdin_thread = nil
+
+  @@mutex = Mutex.new
 
   def self.initialized?
     @@initialized
@@ -66,8 +69,8 @@ class PianoBar
         print c
         #Now we will slice the output string if it's too long, this is to hopefully save memory
         lines = @@output.lines.to_a
-        if lines.length > 100
-          @@output = lines.slice(lines.length - 100, 100).join("\n")
+        if lines.length > 1000
+          @@output = lines.slice(500, 500).join("\n")
         end
       end
     }
@@ -91,15 +94,17 @@ class PianoBar
   end
 
   def self.current_song
-    @@pianobar[:stdin].puts "i"
-    sleep 0.5
-    current = ""
-    @@output.each_line do |line|
-      if line =~ /\|\>/
-        current = line
+    @@mutex.synchronize do
+      @@pianobar[:stdin].puts "i"
+      sleep 0.5
+      current = ""
+      @@output.each_line do |line|
+        if line =~ /\|\>/
+          current = line
+        end
       end
+      current.split("|>").last
     end
-    current.split("|>").last
   end
 
   def self.current_station
@@ -111,63 +116,81 @@ class PianoBar
   end
 
   def self.select_station station
-    if @@has_selected_station
-      @@pianobar[:stdin].puts "s#{station}"
-    else
-      @@has_selected_station = true
-      @@pianobar[:stdin].puts station
+    @@mutex.synchronize do
+      if @@has_selected_station
+        @@pianobar[:stdin].puts "s#{station}"
+      else
+        @@has_selected_station = true
+        @@pianobar[:stdin].puts station
+      end
+      @@current_station = stations[station.to_i]
     end
-    @@current_station = stations[station.to_i]
   end
 
   def self.thumbs_up
-    @@pianobar[:stdin].puts "+"
+    @@mutex.synchronize do
+      @@pianobar[:stdin].puts "+"
+    end
   end
 
   def self.thumbs_down
-    @@pianobar[:stdin].puts "-"
+    @@mutex.synchronize do
+      @@pianobar[:stdin].puts "-"
+    end
   end
 
   def self.next_song
-    @@pianobar[:stdin].puts "n"
+    @@mutex.synchronize do
+      @@pianobar[:stdin].puts "n"
+    end
   end
 
   def self.vol_up
-    @@pianobar[:stdin].puts ")"
+    @@mutex.synchronize do
+      @@pianobar[:stdin].puts ")"
+    end
   end
 
   def self.vol_down
-    @@pianobar[:stdin].puts "("
+    @@mutex.synchronize do
+      @@pianobar[:stdin].puts "("
+    end
   end
 
   def self.play_pause
-    @@pianobar[:stdin].puts "p"
+    @@mutex.synchronize do
+      @@pianobar[:stdin].puts "p"
+    end
   end
 
   def self.song_information
-    @@pianobar[:stdin].puts "e"
-    sleep 2
-    explanation = ""
-    @@output.each_line do |line|
-      if line =~ /\(i\)/
-        explanation = line
+    @@mutex.synchronize do
+      @@pianobar[:stdin].puts "e"
+      sleep 2
+      explanation = ""
+      @@output.each_line do |line|
+        if line =~ /\(i\)/
+          explanation = line
+        end
       end
+      explanation
     end
-    explanation
   end
 
   def self.upcoming_songs
-    puts "In upcoming songs"
-    @@pianobar[:stdin].puts "u"
-    sleep 1
-    songs = []
-    @@output.lines.to_a.reverse.each do |line|
-      if line =~ /.*\d+\) (.*)/
-        songs.push($1)
+    @@mutex.synchronize do
+      puts "In upcoming songs"
+      @@pianobar[:stdin].puts "u"
+      sleep 1
+      songs = []
+      @@output.lines.to_a.reverse.each do |line|
+        if line =~ /.*\d+\) (.*)/
+          songs.push($1)
+        end
+        break if line =~ /.*0\).*/
       end
-      break if line =~ /.*0\).*/
+      songs
     end
-    songs
   end
 
 end
