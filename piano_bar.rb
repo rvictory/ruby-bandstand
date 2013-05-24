@@ -92,7 +92,7 @@ class PianoBar
 
   def self.current_song
     @@pianobar[:stdin].puts "i"
-    sleep 2
+    sleep 0.5
     current = ""
     @@output.each_line do |line|
       if line =~ /\|\>/
