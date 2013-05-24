@@ -40,7 +40,13 @@ class PianoBar
 
     @@has_selected_station = false
 
-    @@pianobar[:stdin], @@pianobar[:stdout], @@pianobar[:waitthr] = Open3.popen2('/opt/local/bin/pianobar')
+    if File.exists?('/opt/local/bin/pianobar')
+      pianobar_path = '/opt/local/bin/pianobar'
+    else
+      pianobar_path = 'pianobar'
+    end
+
+    @@pianobar[:stdin], @@pianobar[:stdout], @@pianobar[:waitthr] = Open3.popen2(pianobar_path)
     puts @@pianobar[:stdout].readline
     @@pianobar[:stdin].puts username
     puts @@pianobar[:stdout].readline

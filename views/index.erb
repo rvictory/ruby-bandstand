@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Ryan's Pandora</title>
+  <title>Bandstand</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="/scripts/frameworks/jquery.js"></script>
   <script src="/scripts/frameworks/underscore.js"></script>
@@ -49,19 +49,20 @@
         <div class='span8'>
           <h3>Now playing: <span id="nowplaying"></span></h3>
           <h5>Time remaining: <span id="time"></span> </h5>
+          <br>
+          <div class="btn-group">
+            <button class='btn btn-success btn-large' onclick='thumbsUp();'> <i class="icon-thumbs-up icon-white"></i> </button>
+            <button class='btn btn-danger btn-large' onclick='thumbsDown();'> <i class="icon-thumbs-down icon-white"></i> </button>
+            <button class='btn btn-large' onclick='playPause();'> <i class="icon-play"></i><i class="icon-pause"></i> </button>
+            <button class='btn btn-large' onclick='nextSong();'> <i class="icon-step-forward"></i> </button>
+            <button class='btn btn-large' onclick='volumeDown();'> <i class="icon-volume-down"></i> </button>
+            <button class='btn btn-large' onclick='volumeUp();'> <i class="icon-volume-up"></i> </button>
+          </div>
+          <br>
+          <a data-toggle="modal" href="/info/explain_current_song" data-target="#myModal">Why did Pandora play this song?</a>
         </div>
       </div>
-        <br>
-      <div class="btn-group">
-          <button class='btn btn-success btn-large' onclick='thumbsUp();'> <i class="icon-thumbs-up icon-white"></i> </button>
-          <button class='btn btn-danger btn-large' onclick='thumbsDown();'> <i class="icon-thumbs-down icon-white"></i> </button>
-          <button class='btn btn-large' onclick='playPause();'> <i class="icon-play"></i><i class="icon-pause"></i> </button>
-          <button class='btn btn-large' onclick='nextSong();'> <i class="icon-step-forward"></i> </button>
-          <button class='btn btn-large' onclick='volumeDown();'> <i class="icon-volume-down"></i> </button>
-          <button class='btn btn-large' onclick='volumeUp();'> <i class="icon-volume-up"></i> </button>
-      </div>
-      <br>
-      <a data-toggle="modal" href="/info/explain_current_song" data-target="#myModal">Why did Pandora play this song?</a>
+
     </div>
   </div>
 </div>

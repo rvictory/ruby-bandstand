@@ -6,8 +6,8 @@ require 'json'
 # Put your api_secret in a file called "api_secret"
 # Put your api_key in a file called "api_key"
 
-Scrobbler2::Base.api_secret = File.open('api_secret', 'rb') { |file| file.read }
-Scrobbler2::Base.api_key = File.open('api_key', 'rb') { |file| file.read }
+Scrobbler2::Base.api_secret = File.open('api_secret', 'rb') { |file| file.read }.chomp
+Scrobbler2::Base.api_key = File.open('api_key', 'rb') { |file| file.read }.chomp
 
 class SongInfo
 
