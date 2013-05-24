@@ -123,18 +123,15 @@
           $('#nowplaying').html(results);
       });
 
-
-
       $.get('/info/current_time', function (time) {
           $('#time').html(time);
       });
+
       $.get('/info/login_status', function (status) {
           if (status == "disconnected") {
               window.location = "/";
           }
       });
-
-
   }, 2000);
 
   window.setInterval(function () {
