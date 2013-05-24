@@ -7,8 +7,8 @@
   <script src="/scripts/frameworks/jquery.js"></script>
   <script src="/scripts/frameworks/underscore.js"></script>
   <script src="/bootstrap/js/bootstrap.js"></script>
-
   <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 
 
   <style>
@@ -145,6 +145,14 @@
           }
       });
 
+      $.get('/info/current_album_art', function (results) {
+          if ($('#album_art').attr('src') != results) {
+              $('#album_art').attr('src', results);
+          }
+      });
+  }, 8000);
+
+  window.setInterval(function () {
       $.getJSON('/info/upcoming_songs', function (songs) {
           if (songs) {
               $('#upcoming_songs').html('');
@@ -153,13 +161,7 @@
               }
           }
       });
-
-      $.get('/info/current_album_art', function (results) {
-          if ($('#album_art').attr('src') != results) {
-              $('#album_art').attr('src', results);
-          }
-      });
-  }, 8000);
+  }, 15000);
 
   window.setInterval(function () {
       window.location = "/";
