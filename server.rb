@@ -9,6 +9,7 @@
 require 'sinatra'
 require 'open3'
 require './piano_bar'
+require './song_info'
 
 configure do
 end
@@ -68,6 +69,20 @@ end
 
 get '/info/current_song' do
   PianoBar.current_song
+end
+
+get '/info/current_album_art' do
+  song_info = PianoBar.current_song
+  return "" if song_info.nil?
+  song_name, temp = song_info.split(" by ")
+  artist, album = temp.split(" on ") unless temp.nil?
+  if artist && album
+    artist.gsub!('"', '')
+    album.gsub!('"', '').gsub!(' (Single)', '')
+    return SongInfo.get_album_image_url(artist, album)
+  else
+    return ""
+  end
 end
 
 get '/info/current_time' do

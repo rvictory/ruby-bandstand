@@ -26,21 +26,32 @@
 
 <div class="container-fluid">
   <div class='row-fluid'>
+    <div class='span12'>
+      <h3>Bandstand <small><a href="/pandora_logout">Logout of Pandora (this will stop the music)</a></small></h3>
+    </div>
+  </div>
+  <div class='row-fluid'>
     <div class='span4'>
-      <h3>Ryan's Pandora Web Interface</h3>
-      <a href="/pandora_logout" class='btn'>Logout of Pandora (this will stop the music)</a>
-      <div class='well'>
-        <h3>Stations (click one to choose)</h3>
-        <ul>
+      <div class='well' style='padding: 8px 0'>
+        <ul class='nav nav-list'>
+          <li class="nav-header">Stations (click one to choose)</li>
           <% PianoBar.stations.each_with_index do |station, index| %>
-          <li><a href="#" onclick="selectStation('<%= index %>')"><%= station %></a></li>
+          <li <%= "class='active'" if station == PianoBar.current_station %>><a href="#" onclick="selectStation('<%= index %>'); $(this).parent().parent().find('.active').removeClass('active'); $(this).parent().addClass('active');"><%= station %></a></li>
           <% end %>
         </ul>
       </div>
     </div>
     <div class='span8'>
-      <h3>Now playing: <span id="nowplaying"></span></h3>
-      <h5>Time remaining: <span id="time"></span> </h5>
+      <div class='row-fluid'>
+        <div class='span4'>
+          <img id='album_art'>
+        </div>
+        <div class='span8'>
+          <h3>Now playing: <span id="nowplaying"></span></h3>
+          <h5>Time remaining: <span id="time"></span> </h5>
+        </div>
+      </div>
+        <br>
       <div class="btn-group">
           <button class='btn btn-success btn-large' onclick='thumbsUp();'> <i class="icon-thumbs-up icon-white"></i> </button>
           <button class='btn btn-danger btn-large' onclick='thumbsDown();'> <i class="icon-thumbs-down icon-white"></i> </button>
@@ -51,8 +62,6 @@
       </div>
       <br>
       <a data-toggle="modal" href="/info/explain_current_song" data-target="#myModal">Why did Pandora play this song?</a>
-      <br><br><br><br>
-      <a href="/commands/re_init" class='btn'>Is everything broken? Click here to reset</a>
     </div>
   </div>
 </div>
@@ -103,6 +112,13 @@
       $.get('/info/current_song', function (results) {
           $('#nowplaying').html(results);
       });
+
+      $.get('/info/current_album_art', function (results) {
+          if ($('#album_art').attr('src') != results) {
+              $('#album_art').attr('src', results);
+          }
+      });
+
       $.get('/info/current_time', function (time) {
           $('#time').html(time);
       });

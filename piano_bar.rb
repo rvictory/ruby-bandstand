@@ -61,7 +61,7 @@ class PianoBar
         #Now we will slice the output string if it's too long, this is to hopefully save memory
         lines = @@output.lines.to_a
         if lines.length > 100
-          @@output = lines.slice(lines.length - 100, 100)
+          @@output = lines.slice(lines.length - 100, 100).join("\n")
         end
       end
     }
