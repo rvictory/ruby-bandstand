@@ -68,6 +68,10 @@
 
       </div>
       <a href='#' target='_blank' id='view_full_lyrics'>View full lyrics</a>
+      <h5>Upcoming Songs</h5>
+      <ul id='upcoming_songs'>
+
+      </ul>
     </div>
   </div>
 </div>
@@ -119,11 +123,7 @@
           $('#nowplaying').html(results);
       });
 
-      $.get('/info/current_album_art', function (results) {
-          if ($('#album_art').attr('src') != results) {
-              $('#album_art').attr('src', results);
-          }
-      });
+
 
       $.get('/info/current_time', function (time) {
           $('#time').html(time);
@@ -133,13 +133,33 @@
               window.location = "/";
           }
       });
+
+
+  }, 2000);
+
+  window.setInterval(function () {
       $.getJSON('/info/lyrics', function (lyrics) {
           if (lyrics) {
               $('#lyrics').html(lyrics.lyrics.replace("\n", "<br>"));
               $('#view_full_lyrics').attr('href', lyrics.full_url);
           }
-      })
-  }, 2000);
+      });
+
+      $.getJSON('/info/upcoming_songs', function (songs) {
+          if (songs) {
+              $('#upcoming_songs').html('');
+              for (var i = 0; i < songs.length; i++) {
+                  $('#upcoming_songs').append("<li>" + songs[i] + "</li>");
+              }
+          }
+      });
+
+      $.get('/info/current_album_art', function (results) {
+          if ($('#album_art').attr('src') != results) {
+              $('#album_art').attr('src', results);
+          }
+      });
+  }, 8000);
 
   window.setInterval(function () {
       window.location = "/";

@@ -154,6 +154,20 @@ class PianoBar
     explanation
   end
 
+  def self.upcoming_songs
+    puts "In upcoming songs"
+    @@pianobar[:stdin].puts "u"
+    sleep 1
+    songs = []
+    @@output.lines.to_a.reverse.each do |line|
+      if line =~ /.*\d+\) (.*)/
+        songs.push($1)
+      end
+      break if line =~ /.*0\).*/
+    end
+    songs
+  end
+
 end
 
 =begin

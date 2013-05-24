@@ -17,16 +17,10 @@ class SongInfo
   end
 
   def self.get_album_image_url(artist, album)
-    puts artist
-    puts album
     results = JSON.parse(Scrobbler2::Base.get('album.getInfo', {'artist' => artist, 'album' => album}).body)
     if results
-      puts results.inspect
       if results['album']
-        puts "We have an album"
         if results['album']['image']
-          puts "We have an image"
-          puts results['album']['image'].inspect
           url = ''
           results['album']['image'].each do |image|
             if url == ''

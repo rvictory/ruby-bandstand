@@ -1,10 +1,7 @@
 # PianoBarWeb - A Web interface for pianobar
 # By Ryan Victory
 #
-#TODO: highlight selected station on web interface
-#TODO: Make the interface a little prettier
 #TODO: Implement more complex things from pianobar (station creation, mixing, etc.)
-#TODO: Allow users to log in from their own pandora account
 
 require 'sinatra'
 require 'open3'
@@ -69,6 +66,10 @@ end
 
 get '/info/current_song' do
   PianoBar.current_song
+end
+
+get '/info/upcoming_songs' do
+  PianoBar.upcoming_songs.to_json
 end
 
 get '/info/current_album_art' do
