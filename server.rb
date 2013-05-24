@@ -85,6 +85,19 @@ get '/info/current_album_art' do
   end
 end
 
+get '/info/lyrics' do
+  song_info = PianoBar.current_song
+  return "" if song_info.nil?
+  song_name, temp = song_info.split(" by ")
+  artist, album = temp.split(" on ") unless temp.nil?
+  if artist && song_name
+    artist.gsub!('"', '')
+    song_name.gsub!('"', '')
+    return SongInfo.get_lyrics(artist, song_name).to_json
+  end
+  return {}.to_json
+end
+
 get '/info/current_time' do
   PianoBar.current_time
 end

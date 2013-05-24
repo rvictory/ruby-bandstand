@@ -2,6 +2,7 @@
 require 'active_support/all'
 require 'scrobbler2'
 require 'json'
+require 'open-uri'
 
 # Put your api_secret in a file called "api_secret"
 # Put your api_key in a file called "api_key"
@@ -57,11 +58,24 @@ class SongInfo
     end
   end
 
+  def self.get_lyrics(artist, song)
+    api_key = '61f688602decddd9992649616f891c'
+    results = open(URI::encode("http://api.lyricsnmusic.com/songs?api_key=#{api_key}&q=#{artist} #{song}")) { |file| file.read }
+    if results
+      results = JSON.parse(results)
+      if results.is_a?(Array) && results.length > 0
+        return {'full_url' => results.first['url'], 'lyrics' => results.first['snippet']}
+      end
+    end
+    return {'full_url' => '', 'lyrics' => ''}
+  end
+
 end
 
 # Testing Code
 if __FILE__ == $0
   #puts SongInfo.get_song_info("Fun.", "Some Nights").info
-  puts SongInfo.get_album_image_url("Bruno Mars", "Locked Out Of Heaven")
-  puts JSON.parse(Scrobbler2::Base.get('album.getInfo', {'artist' => 'Sh', 'album' => 'Locked Out of Heaven'}).body)['album']['image']
+  #puts SongInfo.get_album_image_url("Bruno Mars", "Locked Out Of Heaven")
+  #puts JSON.parse(Scrobbler2::Base.get('album.getInfo', {'artist' => 'Sh', 'album' => 'Locked Out of Heaven'}).body)['album']['image']
+  puts SongInfo.get_lyrics('Eminem', 'Love the way you lie').inspect
 end

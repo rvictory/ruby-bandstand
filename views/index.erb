@@ -61,8 +61,13 @@
           <br>
           <a data-toggle="modal" href="/info/explain_current_song" data-target="#myModal">Why did Pandora play this song?</a>
         </div>
-      </div>
 
+      </div>
+      <h5>Lyrics</h5>
+      <div id='lyrics'>
+
+      </div>
+      <a href='#' target='_blank' id='view_full_lyrics'>View full lyrics</a>
     </div>
   </div>
 </div>
@@ -128,6 +133,12 @@
               window.location = "/";
           }
       });
+      $.getJSON('/info/lyrics', function (lyrics) {
+          if (lyrics) {
+              $('#lyrics').html(lyrics.lyrics.replace("\n", "<br>"));
+              $('#view_full_lyrics').attr('href', lyrics.full_url);
+          }
+      })
   }, 2000);
 
   window.setInterval(function () {
