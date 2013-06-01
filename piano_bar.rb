@@ -179,11 +179,10 @@ class PianoBar
 
   def self.upcoming_songs
     @@mutex.synchronize do
-      puts "In upcoming songs"
       @@pianobar[:stdin].puts "u"
       sleep 1
       songs = []
-      @@output.lines.to_a.reverse.each do |line|
+      @@output.lines.to_a.each do |line|
         if line =~ /.*\d+\) (.*)/
           songs.push($1)
         end
